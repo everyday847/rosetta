@@ -107,17 +107,15 @@ SizeValuedParameter::set_default_value(
 }
 
 /// @brief Given another parameter of the same type, copy its value.  This does *not* set value_set_ to true.
-/// @details Performs type checking in debug mode.
+/// @details Performs type checking in all build modes.
 bool
 SizeValuedParameter::copy_value_from_parameter(
 	ParameterCOP other_parameter,
 	ParametersCOP /*other_parameter_collection*/,
 	ParametersCOP /*this_parameter_collection*/
 ) {
-#ifndef NDEBUG
-	debug_assert( utility::pointer::dynamic_pointer_cast< SizeValuedParameter const >(other_parameter) != nullptr );
-#endif
-	SizeValuedParameterCOP other_parameter_cast( utility::pointer::static_pointer_cast< SizeValuedParameter const >( other_parameter ) );
+	SizeValuedParameterCOP other_parameter_cast( utility::pointer::dynamic_pointer_cast< SizeValuedParameter const >( other_parameter ) );
+	runtime_assert_string_msg( other_parameter_cast != nullptr, "Error in SizeValuedParameter::copy_value_from_parameter(): The other parameter is not a SizeValuedParameter!" );
 	value_ = other_parameter_cast->value();
 	return false;
 }
